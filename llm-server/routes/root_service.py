@@ -79,7 +79,7 @@ async def handle_request(
         )
 
         if len(step.ids) > 0:
-            response = await handle_api_calls(
+            return await handle_api_calls(
                 ids=step.ids,
                 swagger_doc=get_swagger_doc(swagger_url),
                 app=app,
@@ -90,8 +90,6 @@ async def handle_request(
                 text=text,
                 swagger_url=swagger_url,
             )
-
-            return response
         else:
             return {"error": None, "response": step.bot_message}
     except Exception as e:
@@ -100,7 +98,7 @@ async def handle_request(
 
 def log_user_request(text: str) -> None:
     logger.info(
-        "[OpenCopilot] Got the following user request: {}".format(text),
+        f"[OpenCopilot] Got the following user request: {text}",
         extra={"incident": "log_user_request"},
     )
 
@@ -152,15 +150,13 @@ def handle_existing_workflow(
             {"_id": ObjectId(document.metadata["workflow_id"])}
         )
 
-    output = run_workflow(
+    return run_workflow(
         _workflow,
         swagger_doc,
         WorkflowData(text, headers, server_base_url, swagger_url, app),
         app,
         bot_id=bot_id,
     )
-
-    return output
 
 
 async def handle_api_calls(
