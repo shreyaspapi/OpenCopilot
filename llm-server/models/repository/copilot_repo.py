@@ -134,8 +134,7 @@ def find_one_or_fail_by_id(bot_id: str) -> Chatbot:
     """
     session: Session = SessionLocal()
     try:
-        bot = session.query(Chatbot).filter(Chatbot.id == str(bot_id)).one()
-        return bot
+        return session.query(Chatbot).filter(Chatbot.id == bot_id).one()
     except exc.NoResultFound:
         raise ValueError(f"No Chatbot found with id: {bot_id}")
     except Exception as e:
@@ -161,8 +160,7 @@ def find_one_or_fail_by_token(bot_token: str) -> Chatbot:
     """
     session: Session = SessionLocal()
     try:
-        bot = session.query(Chatbot).filter(Chatbot.token == str(bot_token)).one()
-        return bot
+        return session.query(Chatbot).filter(Chatbot.token == bot_token).one()
     except exc.NoResultFound:
         raise ValueError(f"No Chatbot found with token: {bot_token}")
     except Exception as e:
